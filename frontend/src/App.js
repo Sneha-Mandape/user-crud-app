@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import UserForm from './components/UserForm';
 import UserList from './components/UserList';
+import './App.css';
 
 function App() {
   const [editingUser, setEditingUser] = useState(null);
@@ -12,12 +13,14 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div className="container">
       <h1>User CRUD App</h1>
       <UserForm editingUser={editingUser} onSuccess={refresh} />
       <UserList onEdit={setEditingUser} key={reload} />
     </div>
   );
 }
+
+
 
 export default App;

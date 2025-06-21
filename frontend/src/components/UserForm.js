@@ -1,96 +1,76 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from "react";
 
-const UserForm = ({ editingUser, onSuccess }) => {
+function UserForm({ editingUser, onSuccess }) {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    dob: ''
+    name: "",
+    email: "",
+    password: "",
+    dob: "",
   });
 
   useEffect(() => {
-    if (editingUser) {
-      setFormData({
-        name: editingUser.name,
-        email: editingUser.email,
-        password: '',
-        dob: editingUser.dob
-      });
-    }
+    if (editingUser) setFormData(editingUser);
   }, [editingUser]);
 
-  const handleChange = (e) => {
+  const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
     const url = editingUser
       ? "http://localhost/user-crud-app/backend/routes/update_users.php"
       : "http://localhost/user-crud-app/backend/routes/create_users.php";
 
-    const method = editingUser ? "PUT" : "POST";
-
-    const payload = { ...formData };
-    if (editingUser) {
-      payload.id = editingUser.id;
-      delete payload.password;
-    }
-
-    fetch(url, {
-      method,
+    const response = await fetch(url, {
+      method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    }).then(() => {
-      setFormData({ name: '', email: '', password: '', dob: '' });
-      onSuccess();
+      body: JSON.stringify(formData),
     });
+
+    if (response.ok) {
+      setFormData({ name: "", email: "", password: "", dob: "" });
+      onSuccess();
+    }
   };
 
   return (
-    <div>
-      <h2>{editingUser ? 'Update' : 'Add'} User</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-        /><br />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        /><br />
-        {!editingUser && (
-          <>
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            /><br />
-          </>
-        )}
-        <input
-          type="date"
-          name="dob"
-          value={formData.dob}
-          onChange={handleChange}
-          required
-        /><br />
-        <button type="submit">{editingUser ? 'Update' : 'Create'}</button>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        name="name"
+        value={formData.name}
+        onChange={handleChange}
+        placeholder="Name"
+        required
+      />
+      <input
+        type="email"
+        name="email"
+        value={formData.email}
+        onChange={handleChange}
+        placeholder="Email"
+        required
+      />
+      <input
+        type="password"
+        name="password"
+        value={formData.password}
+        onChange={handleChange}
+        placeholder="Password"
+        required
+      />
+      <input
+        type="date"
+        name="dob"
+        value={formData.dob}
+        onChange={handleChange}
+        required
+      />
+      <button type="submit">
+        {editingUser ? "Update User" : "Add User"}
+      </button>
+    </form>
   );
-};
+}
 
 export default UserForm;

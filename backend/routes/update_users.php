@@ -1,19 +1,4 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: 'X-Requested-With,content-type'");
-header("Access-Control-Allow-Methods: 'GET, POST, OPTIONS, PUT, PATCH, DELETE'");
-
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit;
-}
-
-// Now validate allowed method (POST for create, PUT for update)
-if ($_SERVER["REQUEST_METHOD"] !== "PUT") {
-    echo json_encode(["message" => "Invalid request method"]);
-    exit;
-}
-
 include_once "../config/db.php";
 include_once "../models/User.php";
 
