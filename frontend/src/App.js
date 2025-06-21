@@ -1,23 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import UserForm from './components/UserForm';
+import UserList from './components/UserList';
 
 function App() {
+  const [editingUser, setEditingUser] = useState(null);
+  const [reload, setReload] = useState(false);
+
+  const refresh = () => {
+    setEditingUser(null);
+    setReload(!reload); // toggles to trigger re-fetch
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>User CRUD App</h1>
+      <UserForm editingUser={editingUser} onSuccess={refresh} />
+      <UserList onEdit={setEditingUser} key={reload} />
     </div>
   );
 }
